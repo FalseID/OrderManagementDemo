@@ -9,12 +9,12 @@ import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import main.java.OMSDemo.repository.ClientRepository;
 import main.java.OMSDemo.repository.OrderRepository;
 import main.java.OMSDemo.repository.ProductRepository;
 import main.java.OMSDemo.services.OmsService;
-import main.java.OMSDemo.util.LocaleUtil;
 import main.java.OMSDemo.util.PriceConverter;
 import main.java.OMSDemo.util.PriceFormatter;
 import main.java.OMSDemo.domain.Client;
@@ -24,6 +24,7 @@ import main.java.OMSDemo.domain.StoreOrder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,9 +38,12 @@ public class OmsController {
 	
 	@ModelAttribute("countries")
 	public List<String> getCountries(){
-		List<String> countries = new ArrayList<String>(LocaleUtil.getCountryToCurrencyMap().keySet());
-		Collections.sort(countries);
-		return countries;
+		try {
+			return omsService.getCountries();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return new ArrayList<String>();
+		}
 	}
 	
 	@ModelAttribute("client")
@@ -78,13 +82,19 @@ public class OmsController {
 	}
 	
 	@RequestMapping(value = "/saveClient", method = RequestMethod.POST)
-	public String saveClient(@ModelAttribute(value="client") Client client){
+	public String saveClient(@Valid @ModelAttribute(value="client") Client client, BindingResult bindingResult){
+		if(bindingResult.hasErrors()){
+			return "redirect:/";
+		}
 		omsService.saveClient(client);
 		return "redirect:/";
 	}
 	
 	@RequestMapping(value = "/saveProduct", method = RequestMethod.POST)
-	public String saveProduct(@ModelAttribute(value="product") Product product){
+	public String saveProduct(@Valid @ModelAttribute(value="product") Product product, BindingResult bindingResult){
+		if(bindingResult.hasErrors()){
+			return "redirect:/";
+		}
 		omsService.saveProduct(product);
 		return "redirect:/";
 	}

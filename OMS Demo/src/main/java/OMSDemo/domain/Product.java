@@ -18,6 +18,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "product")
@@ -27,15 +30,20 @@ public class Product {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long barCode;
 	
+	@Size(min=2, max=50)
 	private String name;
+	
 	private BigDecimal price;
+	
+	@Size(min=0, max=500)
 	private String desc;
 	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	private Date releaseDate;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	private Set<StoreOrder> storeOrder; 
+	@OneToMany
+	private Set<StoreOrder> storeOrder;
 	
 	protected Product() {
 	};
@@ -90,6 +98,10 @@ public class Product {
 
 	public void setReleaseDate(Date releaseDate) {
 		this.releaseDate = releaseDate;
+	}
+
+	public void setBarCode(long barCode) {
+		this.barCode = barCode;
 	}
 	 
 	

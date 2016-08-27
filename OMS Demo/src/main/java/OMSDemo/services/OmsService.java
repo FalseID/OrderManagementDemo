@@ -2,6 +2,8 @@ package main.java.OMSDemo.services;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -39,6 +41,12 @@ public class OmsService {
 	
 	@Autowired
 	private PriceFormatter formatter;
+	
+	public List<String> getCountries() throws IOException{
+		List<String> countries = new ArrayList<String>(converter.getSupportedCountries());
+		Collections.sort(countries);
+		return countries;
+	}
 	
 	public List<Product> getProducts(){
 		return productRepo.findAll();

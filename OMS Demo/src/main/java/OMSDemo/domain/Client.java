@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 
 @Entity
@@ -20,10 +21,18 @@ public class Client {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private long securityCode;
 	
+	@Size(min=2, max=30)
 	private String firstName;
+	
+	@Size(min=2, max=30)
 	private String lastName;
+	
+	@Size(min=5, max=30)
 	private String phoneNumber;
+	
 	private String country;
+	
+	@Size(min=2, max=50)
 	private String address;
 	
 	@OneToMany(cascade = CascadeType.ALL)
@@ -100,6 +109,10 @@ public class Client {
 
 	public String getPhoneNumber() {
 		return phoneNumber;
+	}
+
+	public void setSecurityCode(long securityCode) {
+		this.securityCode = securityCode;
 	}
 	
 	
