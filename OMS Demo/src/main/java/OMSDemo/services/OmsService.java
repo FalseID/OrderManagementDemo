@@ -70,17 +70,31 @@ public class OmsService {
 		productRepo.save(product);
 	}
 	
+	/**
+	 * Makes a transaction specified in the OrderTransfer object.
+	 * @param orderTransfer
+	 * @return The StoreOrder id number.
+	 * @throws IOException
+	 */
 	@Transactional
-	public void makeTransaction(OrderTransfer orderTransfer) throws IOException{
+	public long makeTransaction(OrderTransfer orderTransfer) throws IOException{
 		long securityCode = orderTransfer.getSecurityCode();
 		long barCode = orderTransfer.getBarCode();
 		
+		/*
+		 * It is possible that client and product return null if they are not present in our database.
+		 * However, it should not be possible for OrderTransfer to contain such id's.
+		 */
 		Client client = clientRepo.findBySecurityCode(securityCode);
 		Product product = productRepo.findByBarCode(barCode);
 		
 		BigDecimal convertedPrice = converter.convert(product.getPrice(), client.getCountry());
 		String formattedPrice = formatter.format(convertedPrice, client.getCountry());
-		orderRepo.save(new StoreOrder(client, product, formattedPrice, new Date()));
+		
+		StoreOrder storeOrder = new StoreOrder(client, product, formattedPrice, new Date());
+		orderRepo.save(storeOrder);
+		
+		return storeOrder.getNumber();
 	}
 	
 }
