@@ -1,4 +1,4 @@
-package main.java.OMSDemo;
+package OMSDemo;
 
 import org.h2.server.web.WebServlet;
 import org.springframework.boot.SpringApplication;
@@ -9,18 +9,14 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class OmsDemoApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(OmsDemoApplication.class, args);
-	}
-	
-	/**
-	 * Mapping the H2 console to url.
-	 * @return
-	 */
-	@Bean
-	public ServletRegistrationBean h2servletRegistration() {
-	    ServletRegistrationBean registration = new ServletRegistrationBean(new WebServlet());
-	    registration.addUrlMappings("/console/*");
-	    return registration;
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(OmsDemoApplication.class, args);
+    }
+
+    @Bean
+    public ServletRegistrationBean h2servletRegistration() {
+        ServletRegistrationBean registration = new ServletRegistrationBean(new WebServlet());
+        registration.addUrlMappings("/console/*");
+        return registration;
+    }
 }

@@ -1,10 +1,10 @@
-package main.java.OMSDemo.repository;
-
-import main.java.OMSDemo.domain.Client;
+package OMSDemo.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.*;
+
+import OMSDemo.domain.Client;
 
 public interface ClientRepository extends JpaRepository<Client, Long> {
-	public Client findBySecurityCode(long securityCode);
+
+    public Client findBySecurityCode(long securityCode);
 }

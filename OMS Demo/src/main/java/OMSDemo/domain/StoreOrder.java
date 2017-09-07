@@ -1,6 +1,8 @@
-package main.java.OMSDemo.domain;
+package OMSDemo.domain;
 
+import java.io.Serializable;
 import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,73 +15,73 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "StoreOrder")
-public class StoreOrder {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long number;
-	
-	@ManyToOne
+public class StoreOrder implements Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long number;
+
+    @ManyToOne
     @JoinColumn(name = "client_securityCode")
-	private Client client;
-	
-	@ManyToOne
-	@JoinColumn(name="product_barCode")
-	private Product product;
-	
-	private String formattedPrice;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date transactionDate;
-	
-	protected StoreOrder(){
-	};
-	
-	public StoreOrder(Client client, Product product, String formattedPrice, Date date) {
-		super();
-		this.client = client;
-		this.product = product;
-		this.formattedPrice = formattedPrice;
-		this.transactionDate = date;
-	}
+    private Client client;
 
-	public String getFormattedPrice() {
-		return formattedPrice;
-	}
+    @ManyToOne
+    @JoinColumn(name = "product_barCode")
+    private Product product;
 
-	public void setFormattedPrice(String price) {
-		this.formattedPrice = price;
-	}
+    private String formattedPrice;
 
-	public Date getTransactionDate() {
-		return transactionDate;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date transactionDate;
 
-	public void setTransaction_date(Date transactionDate) {
-		this.transactionDate = transactionDate;
-	}
+    protected StoreOrder() {
+    }
 
-	public Product getProduct() {
-		return product;
-	}
+    public StoreOrder(Client client, Product product, String formattedPrice, Date date) {
+        super();
+        this.client = client;
+        this.product = product;
+        this.formattedPrice = formattedPrice;
+        this.transactionDate = date;
+    }
 
-	public void setProduct(Product product) {
-		this.product = product;
-	}
+    public String getFormattedPrice() {
+        return formattedPrice;
+    }
 
-	public Client getClient() {
-		return client;
-	}
+    public void setFormattedPrice(String price) {
+        this.formattedPrice = price;
+    }
 
-	public void setClient(Client client) {
-		this.client = client;
-	}
+    public Date getTransactionDate() {
+        return transactionDate;
+    }
 
-	public long getNumber() {
-		return number;
-	}
+    public void setTransaction_date(Date transactionDate) {
+        this.transactionDate = transactionDate;
+    }
 
-	public void setNumber(long number) {
-		this.number = number;
-	}
-	
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public long getNumber() {
+        return number;
+    }
+
+    public void setNumber(long number) {
+        this.number = number;
+    }
 }
