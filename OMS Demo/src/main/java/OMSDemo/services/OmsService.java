@@ -3,7 +3,6 @@ package OMSDemo.services;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +20,8 @@ import OMSDemo.repository.OrderRepository;
 import OMSDemo.repository.ProductRepository;
 import OMSDemo.util.PriceConverter;
 import OMSDemo.util.PriceFormatter;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class OmsService {
@@ -42,8 +43,7 @@ public class OmsService {
 
     public List<String> getCountries() throws IOException {
         List<String> countries = new ArrayList<>(converter.getSupportedCountries());
-        Collections.sort(countries);
-        return countries;
+        return countries.stream().sorted().collect(toList());
     }
 
     public List<Product> getProducts() {
@@ -80,10 +80,6 @@ public class OmsService {
         long securityCode = orderTransfer.getSecurityCode();
         long barCode = orderTransfer.getBarCode();
 
-        /*
-		 * It is possible that client and product return null if they are not present in our database.
-		 * However, it should not be possible for OrderTransfer to contain such id's.
-         */
         Client client = clientRepo.findBySecurityCode(securityCode);
         Product product = productRepo.findByBarCode(barCode);
 

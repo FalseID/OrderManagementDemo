@@ -2,6 +2,7 @@ package OMSDemo.util;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.Locale;
@@ -13,65 +14,49 @@ import org.springframework.stereotype.Component;
 
 import OMSDemo.services.FixerRatesService;
 
+import static java.util.Locale.getISOCountries;
+import static java.util.stream.Collectors.toMap;
+
 @Component
 public class PriceConverter {
 
-    private Map<String, Double> currencyToRate;
-    private Map<String, String> countryToSupportedCurrency;
-
     @Autowired
-    private FixerRatesService fixer;
+    FixerRatesService fixer;
 
-    public PriceConverter() {
-        super();
-    }
+    public BigDecimal convert(BigDecimal price, String country) throws IOException {
+        Map<String, Object> fixerRates = fixer.getFixerRatesData();
+        String baseCurrencyCode = (String) fixerRates.get("base");
+        Map<String, Double> currencyCodeToRateMap = (HashMap<String, Double>) fixerRates.get("rates");
+        Map<String, String> countryToSupportedCurrencyMap = getCountryToSupportedCurrencyMap(currencyCodeToRateMap, baseCurrencyCode);
 
-    public BigDecimal convert(BigDecimal old_price, String country) throws IOException {
-        updateRates();
-
-        String currency = this.countryToSupportedCurrency.get(country);
-        if (currency.equals("EUR")) {
-            return old_price;
-        }
-
-        BigDecimal new_price = old_price.multiply(new BigDecimal(currencyToRate.get(currency)));
-        return new_price;
-    }
-
-    /**
-     * Initializes our fields(updates conversion rates and supported countries).
-     *
-     * @throws IOException
-     */
-    public void updateRates() throws IOException {
-        /*
-		 *Initalize currencyToRate
-         */
-        Map<String, Object> map = fixer.getFixerData();
-        this.currencyToRate = (HashMap<String, Double>) map.get("rates");
-        String base = (String) map.get("base");
-        /*
-		 *Initalize countryToSupportedCurrency
-         */
-        Map<String, String> countriesToSupportedCurrency = new HashMap<>();
-        for (String iso : Locale.getISOCountries()) {
-            Locale l = new Locale("", iso);
-            Currency currency = Currency.getInstance(l);
-            if (currency == null) {
-                continue;
-            }
-            String currency_code = currency.getCurrencyCode();
-            //We only include countries that use the base currency or have an available conversion rate from our API.
-            if (this.currencyToRate.keySet().contains(currency_code) || currency_code.equals(base)) {
-                countriesToSupportedCurrency.put(l.getDisplayCountry(), currency_code);
-            }
-        }
-        this.countryToSupportedCurrency = countriesToSupportedCurrency;
+        String currencyCode = countryToSupportedCurrencyMap.get(country);
+        if (currencyCode.equals("EUR"))
+            return price;
+        else
+            return price.multiply(new BigDecimal(currencyCodeToRateMap.get(currencyCode)));
     }
 
     public Set<String> getSupportedCountries() throws IOException {
-        updateRates();
-        return this.countryToSupportedCurrency.keySet();
+        Map<String, Object> fixerRates = fixer.getFixerRatesData();
+        String baseCurrencyCode = (String) fixerRates.get("base");
+        Map<String, Double> currencyCodeToRateMap = (HashMap<String, Double>) fixerRates.get("rates");
+        return getCountryToSupportedCurrencyMap(currencyCodeToRateMap, baseCurrencyCode).keySet();
     }
 
+    private Map<String, String> getCountryToSupportedCurrencyMap(Map<String, Double> currencyToRateMap, String baseCurrencyCode) {
+        return Arrays.stream(getISOCountries())
+                .map(iso -> new Locale("", iso))
+                .filter(locale -> hasCompatibleCurrency(locale, currencyToRateMap, baseCurrencyCode))
+                .collect(toMap(locale -> locale.getDisplayCountry(), locale -> getCurrencyCode(locale)));
+    }
+
+    private boolean hasCompatibleCurrency(Locale locale, Map<String, Double> currencyToRateMap, String baseCurrencyCode) {
+        String currencyCode = getCurrencyCode(locale);
+        return !currencyCode.isEmpty() && (currencyToRateMap.keySet().contains(currencyCode) || currencyCode.equals(baseCurrencyCode));
+    }
+
+    private String getCurrencyCode(Locale locale) {
+        Currency currency = Currency.getInstance(locale);
+        return currency != null ? currency.getCurrencyCode() : "";
+    }
 }

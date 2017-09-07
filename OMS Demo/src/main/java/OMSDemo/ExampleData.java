@@ -34,5 +34,4 @@ public class ExampleData implements CommandLineRunner {
         productRepository.save(new Product("Vanilla Extract", new BigDecimal(5), "A regular old vanilla", new Date()));
         productRepository.save(new Product("Bean", new BigDecimal(5), "A regular old bean", new Date()));
     }
-
 }

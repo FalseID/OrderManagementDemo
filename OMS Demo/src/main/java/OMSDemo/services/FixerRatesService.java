@@ -11,13 +11,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class FixerRatesService {
 
-    private String urlString = "http://api.fixer.io/latest";
+    private String fixerUrl = "http://api.fixer.io/latest";
 
     @SuppressWarnings("unchecked")
-    public Map<String, Object> getFixerData() throws IOException {
-        URL url = new URL(urlString);
+    public Map<String, Object> getFixerRatesData() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        Map<String, Object> map = mapper.readValue(url, Map.class);
-        return map;
+        return mapper.readValue(new URL(fixerUrl), Map.class);
     }
 }

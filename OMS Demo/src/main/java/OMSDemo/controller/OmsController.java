@@ -2,7 +2,6 @@ package OMSDemo.controller;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,9 +31,8 @@ public class OmsController {
     public List<String> getCountries() {
         try {
             return omsService.getCountries();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to fetch supported countries", ex);
         }
     }
 
@@ -75,19 +73,13 @@ public class OmsController {
 
     @RequestMapping(value = "/saveClient", method = RequestMethod.POST)
     public String saveClient(@Valid @ModelAttribute(value = "client") Client client, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "redirect:/";
-        }
-        omsService.saveClient(client);
+        if (!bindingResult.hasErrors()) omsService.saveClient(client);
         return "redirect:/";
     }
 
     @RequestMapping(value = "/saveProduct", method = RequestMethod.POST)
     public String saveProduct(@Valid @ModelAttribute(value = "product") Product product, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "redirect:/";
-        }
-        omsService.saveProduct(product);
+        if (!bindingResult.hasErrors()) omsService.saveProduct(product);
         return "redirect:/";
     }
 
@@ -95,8 +87,8 @@ public class OmsController {
     public String conductOrdersaveClient(@ModelAttribute(value = "orderTransfer") OrderTransfer orderTransfer) {
         try {
             omsService.makeTransaction(orderTransfer);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to make transaction", ex);
         }
         return "redirect:/";
     }
