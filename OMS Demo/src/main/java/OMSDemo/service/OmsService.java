@@ -1,4 +1,4 @@
-package OMSDemo.services;
+package OMSDemo.service;
 
 import java.io.IOException;
 import java.math.BigDecimal;

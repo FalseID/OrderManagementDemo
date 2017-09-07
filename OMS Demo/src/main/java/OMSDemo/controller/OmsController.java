@@ -19,7 +19,7 @@ import OMSDemo.domain.Client;
 import OMSDemo.domain.OrderTransfer;
 import OMSDemo.domain.Product;
 import OMSDemo.domain.StoreOrder;
-import OMSDemo.services.OmsService;
+import OMSDemo.service.OmsService;
 
 @Controller
 public class OmsController {

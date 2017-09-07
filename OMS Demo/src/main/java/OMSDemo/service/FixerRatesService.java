@@ -1,4 +1,4 @@
-package OMSDemo.services;
+package OMSDemo.service;
 
 import java.io.IOException;
 import java.net.URL;
@@ -11,9 +11,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class FixerRatesService {
 
-    private String fixerUrl = "http://api.fixer.io/latest";
+    private final String fixerUrl = "http://api.fixer.io/latest";
 
-    @SuppressWarnings("unchecked")
     public Map<String, Object> getFixerRatesData() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(new URL(fixerUrl), Map.class);

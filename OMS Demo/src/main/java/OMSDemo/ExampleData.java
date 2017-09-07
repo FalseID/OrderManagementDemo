@@ -27,7 +27,7 @@ public class ExampleData implements CommandLineRunner {
         clientRepository.save(new Client("Chloe", "O'Brian", "44444 4444", "United Kingdom", "9th Street"));
         clientRepository.save(new Client("Kim", "Bauer", "222-222-222", "United States", "Riverside Drive"));
         clientRepository.save(new Client("David", "Palmer", "111-111-111", "United States", "6th Street"));
-        clientRepository.save(new Client("Peeter", "Peeterson", "151 1515", "Eesti", "Järve tänav"));
+        clientRepository.save(new Client("Peeter", "Peeterson", "151 1515", "Estonia", "Järve tänav"));
 
         productRepository.save(new Product("Soap", new BigDecimal(13), "A regular old bar of soap", new Date()));
         productRepository.save(new Product("Bread", new BigDecimal(5), "A regular old bread", new Date()));

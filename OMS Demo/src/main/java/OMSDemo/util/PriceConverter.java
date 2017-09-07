@@ -12,7 +12,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import OMSDemo.services.FixerRatesService;
+import OMSDemo.service.FixerRatesService;
 
 import static java.util.Locale.getISOCountries;
 import static java.util.stream.Collectors.toMap;
