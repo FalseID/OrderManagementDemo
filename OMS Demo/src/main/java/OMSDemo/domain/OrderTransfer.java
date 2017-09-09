@@ -12,8 +12,8 @@ package OMSDemo.domain;
  */
 public class OrderTransfer {
 
-    private long securityCode;
-    private long barCode;
+    private final long securityCode;
+    private final long barCode;
 
     public OrderTransfer(long securityCode, long barCode) {
         this.securityCode = securityCode;
@@ -24,15 +24,7 @@ public class OrderTransfer {
         return securityCode;
     }
 
-    public void setSecurityCode(long securityCode) {
-        this.securityCode = securityCode;
-    }
-
     public long getBarCode() {
         return barCode;
-    }
-
-    public void setBarCode(long barCode) {
-        this.barCode = barCode;
     }
 }
