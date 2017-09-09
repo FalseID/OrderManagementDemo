@@ -49,19 +49,39 @@ public class StoreOrder implements Serializable {
         return formattedPrice;
     }
 
+    public void setFormattedPrice(String price) {
+        this.formattedPrice = price;
+    }
+
     public Date getTransactionDate() {
         return transactionDate;
+    }
+
+    public void setTransaction_date(Date transactionDate) {
+        this.transactionDate = transactionDate;
     }
 
     public Product getProduct() {
         return product;
     }
 
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
     public Client getClient() {
         return client;
     }
 
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
     public long getNumber() {
         return number;
+    }
+
+    public void setNumber(long number) {
+        this.number = number;
     }
 }

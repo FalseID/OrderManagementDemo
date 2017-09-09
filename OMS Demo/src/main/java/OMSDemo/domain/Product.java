@@ -55,12 +55,28 @@ public class Product implements Serializable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }
 
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
     public String getDesc() {
         return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public void setStoreOrder(Set<StoreOrder> storeOrder) {
+        this.storeOrder = storeOrder;
     }
 
     public long getBarCode() {
@@ -73,5 +89,13 @@ public class Product implements Serializable {
 
     public Date getReleaseDate() {
         return releaseDate;
+    }
+
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public void setBarCode(long barCode) {
+        this.barCode = barCode;
     }
 }

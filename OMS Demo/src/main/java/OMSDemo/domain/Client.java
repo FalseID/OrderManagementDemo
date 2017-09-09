@@ -1,6 +1,5 @@
 package OMSDemo.domain;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -14,7 +13,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "client")
-public class Client implements Serializable {
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -78,6 +77,22 @@ public class Client implements Serializable {
         return order;
     }
 
+    public void setOrder(Set<StoreOrder> order) {
+        this.order = order;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public long getSecurityCode() {
         return securityCode;
     }
@@ -93,4 +108,9 @@ public class Client implements Serializable {
     public String getPhoneNumber() {
         return phoneNumber;
     }
+
+    public void setSecurityCode(long securityCode) {
+        this.securityCode = securityCode;
+    }
+
 }
