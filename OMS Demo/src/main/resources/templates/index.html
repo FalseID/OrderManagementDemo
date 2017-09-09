@@ -1,327 +1,325 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <meta charset="utf-8"></meta>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
-    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
-	
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css"></link>
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-    
-    
-    
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    
-    <script type="text/javascript">
-		$(document).ready(function(){
-		    $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
-		        localStorage.setItem('activeTab', $(e.target).attr('href'));
-		    });
-		    var activeTab = localStorage.getItem('activeTab');
-		    if(activeTab){
-		        $('#myTab a[href="' + activeTab + '"]').tab('show');
-		    }
-		    $('#orderTable').DataTable({bPaginate: false, bFilter: false, bInfo: false});
-		});
-		
-		function editClientModal(securityCode, firstName, lastName, phoneNumber, country, address){
-			$(".modal-body #securityCode").val(securityCode);
-			$(".modal-body #firstName").val(firstName);
-			$(".modal-body #lastName").val(lastName);
-			$(".modal-body #phoneNumber").val(phoneNumber);
-			$(".modal-body #country").val(country);
-			$(".modal-body #address").val(address);
-		    $('#editClient').modal('show');		    	
-		}
-		
-		function editProductModal(barCode, name, price, desc, releaseDate){
-			$(".modal-body #barCode").val(barCode);
-			$(".modal-body #name").val(name);
-			$(".modal-body #price").val(price);
-			$(".modal-body #desc").val(desc);
-			$(".modal-body #releaseDate").val(releaseDate);
-		    $('#editProduct').modal('show');    	
-		}
-		
-		
-	</script>
-	
-    <title>OMSDemo</title>
-  </head>
-  <body>
-    <h1>Order Management Demo</h1>
-    
-  <ul class="nav nav-tabs" id="myTab">
-	  <li class="active"><a role="tab" data-toggle="tab" href="#clients">Clients</a></li>
-	  <li><a role="tab" data-toggle="tab" href="#products">Products</a></li>
-	  <li><a role="tab" data-toggle="tab" href="#orders">Order</a></li>
-  </ul>
-	
-  <div class="tab-content">
-	  <div id="clients" class="tab-pane fade in active">
-	  	  <form class="form-inline">
-	  	  	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#addClient">Add</button>
-		  </form>
-		  <table id="clientsTable" class="table">
-		  	<tr class='clickable-row'>
-		  		<th>Security Code</th>
-			    <th>First Name</th>
-			    <th>Last Name</th>
-			    <th>Phone Number</th>
-			    <th>Country</th>
-			    <th>Address</th>
-		  	</tr>
-		  	<tbody>
-               <tr th:each="client : ${clients}">
-		        <td th:text="${client.securityCode}"></td>
-		        <td th:text="${client.firstName}"></td>
-		        <td th:text="${client.lastName}"></td>
-		        <td th:text="${client.phoneNumber}"></td>
-		        <td th:text="${client.country}"></td>
-		        <td th:text="${client.address}"></td>
-		        <td><button type="button" class="btn btn-default"
-		        	th:with='cleanedLastName=${#strings.replace(client.lastName, "&apos;", "\&apos;")}'
-		        	th:onclick="'javascript:editClientModal(\'' + ${client.securityCode} + '\',\'' + ${client.firstName} + '\',\'' + ${cleanedLastName} + '\',\'' + ${client.phoneNumber} + '\',\'' + ${client.country} + '\',\'' + ${client.address} + '\');'">Edit</button></td>
-		      </tr>
-            </tbody>
-		  </table>
-	  </div>
-	  <div id="products" class="tab-pane fade">
-	  	<form class="form-inline">
-	  	  	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#addProduct">Add</button>
-		</form>
-	    <table id="productsTable" class="table">
-		  	<tr class='clickable-row'>
-		  		<th>Bar Code</th>
-			    <th>Name</th>
-			    <th>Price</th>
-			    <th>Description</th>
-			    <th>Release date</th>
-		  	</tr>
-		  	<tbody>
-               <tr th:each="product : ${products}">
-		        <td th:text="${product.barCode}"></td>
-		        <td th:text="${product.name}"></td>
-		        <td th:text="${product.price}"></td>
-		        <td th:text="${product.desc}"></td>
-		        <td th:text="${product.releaseDate}"></td>
-		        <td><button type="button" class="btn btn-default"
-		        	th:with='cleanedName=${#strings.replace(product.name, "&apos;", "\&apos;")}'
-		        	th:onclick="'javascript:editProductModal(\'' + ${product.barCode} + '\',\'' + ${cleanedName} + '\',\'' + ${product.price} + '\',\'' + ${product.desc} + '\',\'' + ${product.releaseDate} + '\');'">Edit</button></td>
-		      </tr>
-            </tbody>
-		  </table>
-	  </div>
-	  <div id="orders" class="tab-pane fade">
-	    <form class="form-inline">
-	  	  	<button type="button" class="btn btn-default" data-toggle="modal" data-target="#addOrder">Add Order</button>
-		  </form>
-		  <table id="orderTable" class="table" data-toggle="data">
-		  	<thead>
-		  	<tr>
-		  		<th>Order number</th>
-			    <th>Client ID</th>
-			    <th>Client First Name</th>
-			    <th>Client Last Name</th>
-			    <th>Price</th>
-			    <th>Transaction Date</th>
-			    <th>Product ID</th>
-			    <th>Product Name</th>
-		  	</tr>
-		  	</thead>
-		  	<tbody>
-               <tr th:each="order : ${orders}">
-		        <td th:text="${order.number}"></td>
-		        <td th:text="${order.client.securityCode}"></td>
-		        <td th:text="${order.client.firstName}"></td>
-		        <td th:text="${order.client.lastName}"></td>
-		        <td th:text="${order.formattedPrice}"></td>
-		        <td th:text="${order.transactionDate}"></td>
-		        <td th:text="${order.product.barCode}"></td>
-		        <td th:text="${order.product.name}"></td>
-		      </tr>
-            </tbody>
-		  </table>
-	  </div>
- </div>
- 
- <!-- Add Client Modal -->
-  <div id="addClient" class="modal fade" role="dialog">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="cancel" data-dismiss="modal">&times;</button>
-	        <h4 class="modal-title">Add Client</h4>
-	      </div>
-	      <div class="modal-body">
-	      	<form class="form-inline" action="#" th:action="@{/saveClient}" th:object="${client}" method="post">
-			  <div class="form-group">
-			    <label for="firstName">First name:</label>
-			    <input type="text" class="form-control" th:field="*{firstName}"></input>
-			  </div>
-			  <div class="form-group">
-			    <label for="lastName">Last name:</label>
-			    <input type="text" class="form-control" th:field="*{lastName}"></input>
-			  </div>
-			  <div class="form-group">
-			    <label for="phoneNumber">Phonenumber:</label>
-			    <input type="text" class="form-control" th:field="*{phoneNumber}"></input>
-			  </div>
-			  <div class="form-group">
-			    <label for="country">Country:</label>
-			    <select class="form-control" th:field="*{country}">
-			    	<option th:each="country : ${countries}" th:value="${country}" th:text="${country}"></option>
-				</select>
-			  </div>
-			  <div class="form-group">
-			    <label for="address">Address:</label>
-			    <input type="text" class="form-control" th:field="*{address}"></input>
-			  </div>
-			  <button type="submit" class="btn btn-default">Submit</button>
-			</form>
-	      </div>
-	    </div>
-	  </div>
-  </div>
-  
-  <!-- Add Product Modal -->
-  <div id="addProduct" class="modal fade" role="dialog">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="cancel" data-dismiss="modal">&times;</button>
-	        <h4 class="modal-title">Add Product</h4>
-	      </div>
-	      <div class="modal-body">
-	      	<form class="form-inline" action="#" th:action="@{/saveProduct}" th:object="${product}" method="post">
-			  <div class="form-group">
-			    <label for="name">Name:</label>
-			    <input type="text" class="form-control" th:field="*{name}"></input>
-			  </div>
-			  <div class="form-group">
-			    <label for="price">Price:</label>
-			    <input type="text" class="form-control" th:field="*{price}"></input>
-			  </div>
-			  <div class="form-group">
-			    <label for="desc">Description:</label>
-			    <input type="text" class="form-control" th:field="*{desc}"></input>
-			  </div>
-			  <button type="submit" class="btn btn-default">Submit</button>
-			</form>
-	      </div>
-	    </div>
-	  </div>
-  </div>
-   <!-- Add Order Modal -->
-  <div id="addOrder" class="modal fade" role="dialog">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="cancel" data-dismiss="modal">&times;</button>
-	        <h4 class="modal-title">Add Order</h4>
-	      </div>
-	      <div class="modal-body">
-	      	<form class="form-inline" action="#" th:action="@{/conductOrder}" th:object="${orderTransfer}" method="post">
-			  <div class="form-group">
-			    <label for="client">Client:</label>
-			    <select class="form-control" th:field="*{securityCode}">
-			    	<option th:each="client : ${clients}" th:value="${client.securityCode}" th:text="${client.securityCode} + ' ' + ${client.firstName} + ' ' + ${client.lastName}"></option>
-				</select>
-			  </div>
-			  <div class="form-group">
-			    <label for="product">Product:</label>
-			    <select class="form-control" th:field="*{barCode}">
-			    	<option th:each="product : ${products}" th:value="${product.barCode}" th:text="${product.barCode} + ' ' +${product.name} "></option>
-				</select>
-			  </div>
-			  <button type="submit" class="btn btn-default">Confirm</button>
-			</form>
-	      </div>
-	    </div>
-	  </div>
-  </div>
-  
-   <!-- Edit Client Modal -->
-  <div id="editClient" class="modal fade" role="dialog">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="cancel" data-dismiss="modal">&times;</button>
-	        <h4 class="modal-title">Edit Client</h4>
-	      </div>
-	      <div class="modal-body">
-	      	<form class="form-inline" action="#" th:action="@{/saveClient}" th:object="${client}" method="post">
-			  <div class="form-group">
-			    <input type="hidden" id="securityCode" class="form-control" th:field="*{securityCode}"></input>
-			  </div>
-			  <div class="form-group">
-			    <label for="firstName">First name:</label>
-			    <input type="text" id="firstName" class="form-control" th:field="*{firstName}"></input>
-			  </div>
-			  <div class="form-group">
-			    <label for="lastName">Last name:</label>
-			    <input type="text" id="lastName" class="form-control" th:field="*{lastName}"></input>
-			  </div>
-			  <div class="form-group">
-			    <label for="phoneNumber">Phonenumber:</label>
-			    <input type="text" id="phoneNumber" class="form-control" th:field="*{phoneNumber}"></input>
-			  </div>
-			  <div class="form-group">
-			    <label for="country">Country:</label>
-			    <select class="form-control" th:field="*{country}">
-			    	<option th:each="country : ${countries}" th:value="${country}" th:text="${country}"></option>
-				</select>
-			  </div>
-			  <div class="form-group">
-			    <label for="address">Address:</label>
-			    <input type="text" id="address" class="form-control" th:field="*{address}"></input>
-			  </div>
-			  <button type="submit" class="btn btn-default">Submit</button>
-			</form>
-	      </div>
-	    </div>
-	  </div>
-  </div>
-  
-  <!-- Edit Product Modal -->
-  <div id="editProduct" class="modal fade" role="dialog">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="cancel" data-dismiss="modal">&times;</button>
-	        <h4 class="modal-title">Edit Product</h4>
-	      </div>
-	      <div class="modal-body">
-	      	<form class="form-inline" action="#" th:action="@{/saveProduct}" th:object="${product}" method="post">
-			  <div class="form-group">
-			    <input type="hidden" id="barCode" class="form-control" th:field="*{barCode}"></input>
-			  </div>
-			  <div class="form-group">
-			    <label for="name">Name:</label>
-			    <input type="text" class="form-control" th:field="*{name}"></input>
-			  </div>
-			  <div class="form-group">
-			    <label for="price">Price:</label>
-			    <input type="text" class="form-control" th:field="*{price}"></input>
-			  </div>
-			  <div class="form-group">
-			    <label for="desc">Description:</label>
-			    <input type="text" class="form-control" th:field="*{desc}"></input>
-			  </div>
-			  <div class="form-group">
-			    <label for="releaseDate">Release Date:</label>
-			    <input type="text" class="form-control" th:field="*{releaseDate}"></input>
-			  </div>
-			  <button type="submit" class="btn btn-default">Submit</button>
-			</form>
-	      </div>
-	    </div>
-	  </div>
-  </div>
-  
-  
-  </body>
+    <head>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css"></link>
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+            $('a[data-toggle="tab"]').on('show.bs.tab', function(e) {
+            localStorage.setItem('activeTab', $(e.target).attr('href'));
+            });
+            var activeTab = localStorage.getItem('activeTab');
+            if(activeTab){
+            $('#myTab a[href="' + activeTab + '"]').tab('show');
+            }
+            $('#orderTable').DataTable({bPaginate: false, bFilter: false, bInfo: false});
+            });
+
+            function editClientModal(securityCode, firstName, lastName, phoneNumber, country, address){
+            $(".modal-body #securityCode").val(securityCode);
+            $(".modal-body #firstName").val(firstName);
+            $(".modal-body #lastName").val(lastName);
+            $(".modal-body #phoneNumber").val(phoneNumber);
+            $(".modal-body #country").val(country);
+            $(".modal-body #address").val(address);
+            $('#editClient').modal('show');		    	
+            }
+
+            function editProductModal(barCode, name, price, desc, releaseDate){
+            $(".modal-body #barCode").val(barCode);
+            $(".modal-body #name").val(name);
+            $(".modal-body #price").val(price);
+            $(".modal-body #desc").val(desc);
+            $(".modal-body #releaseDate").val(releaseDate);
+            $('#editProduct').modal('show');    	
+            }
+        </script>
+
+        <title>OMSDemo</title>
+    </head>
+    <body>
+        <h1>Order Management Demo</h1>
+
+        <ul role="tablist" class="nav nav-tabs" id="myTab">
+            <li class="active"><a role="tab" data-toggle="tab" href="#clients">Clients</a></li>
+            <li><a role="tab" data-toggle="tab" href="#products">Products</a></li>
+            <li><a role="tab" data-toggle="tab" href="#orders">Order</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="clients" class="tab-pane fade in active">
+                <form class="form-inline">
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addClient">Add</button>
+                </form>
+                <table id="clientsTable" class="table">
+                    <tr class='clickable-row'>
+                        <th>Security Code</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Phone Number</th>
+                        <th>Country</th>
+                        <th>Address</th>
+                    </tr>
+                    <tbody>
+                        <tr th:each="client : ${clients}">
+                            <td th:text="${client.securityCode}"></td>
+                            <td th:text="${client.firstName}"></td>
+                            <td th:text="${client.lastName}"></td>
+                            <td th:text="${client.phoneNumber}"></td>
+                            <td th:text="${client.country}"></td>
+                            <td th:text="${client.address}"></td>
+                            <td><button type="button" class="btn btn-default"
+                                        th:with='cleanedLastName=${#strings.replace(client.lastName, "&apos;", "\&apos;")}'
+                                        th:onclick="'javascript:editClientModal(\'' + ${client.securityCode} + '\',\'' + ${client.firstName} + '\',\'' + ${cleanedLastName} + '\',\'' + ${client.phoneNumber} + '\',\'' + ${client.country} + '\',\'' + ${client.address} + '\');'">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="products" class="tab-pane fade">
+                <form class="form-inline">
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addProduct">Add</button>
+                </form>
+                <table id="productsTable" class="table">
+                    <tr class='clickable-row'>
+                        <th>Bar Code</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th>Release date</th>
+                    </tr>
+                    <tbody>
+                        <tr th:each="product : ${products}">
+                            <td th:text="${product.barCode}"></td>
+                            <td th:text="${product.name}"></td>
+                            <td th:text="${product.price}"></td>
+                            <td th:text="${product.desc}"></td>
+                            <td th:text="${product.releaseDate}"></td>
+                            <td><button type="button" class="btn btn-default"
+                                        th:with='cleanedName=${#strings.replace(product.name, "&apos;", "\&apos;")}'
+                                        th:onclick="'javascript:editProductModal(\'' + ${product.barCode} + '\',\'' + ${cleanedName} + '\',\'' + ${product.price} + '\',\'' + ${product.desc} + '\',\'' + ${product.releaseDate} + '\');'">Edit</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="orders" class="tab-pane fade">
+                <form class="form-inline">
+                    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addOrder">Add Order</button>
+                </form>
+                <table id="orderTable" class="table" data-toggle="data">
+                    <thead>
+                        <tr>
+                            <th>Order number</th>
+                            <th>Client ID</th>
+                            <th>Client First Name</th>
+                            <th>Client Last Name</th>
+                            <th>Price</th>
+                            <th>Transaction Date</th>
+                            <th>Product ID</th>
+                            <th>Product Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="order : ${orders}">
+                            <td th:text="${order.number}"></td>
+                            <td th:text="${order.client.securityCode}"></td>
+                            <td th:text="${order.client.firstName}"></td>
+                            <td th:text="${order.client.lastName}"></td>
+                            <td th:text="${order.formattedPrice}"></td>
+                            <td th:text="${order.transactionDate}"></td>
+                            <td th:text="${order.product.barCode}"></td>
+                            <td th:text="${order.product.name}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Add Client Modal -->
+        <div id="addClient" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="cancel" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add Client</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-inline" action="#" th:action="@{/saveClient}" th:object="${client}" method="post">
+                            <div class="form-group">
+                                <label for="firstName">First name:</label>
+                                <input type="text" class="form-control" th:field="*{firstName}"></input>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last name:</label>
+                                <input type="text" class="form-control" th:field="*{lastName}"></input>
+                            </div>
+                            <div class="form-group">
+                                <label for="phoneNumber">Phonenumber:</label>
+                                <input type="text" class="form-control" th:field="*{phoneNumber}"></input>
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country:</label>
+                                <select class="form-control" th:field="*{country}">
+                                    <option th:each="country : ${countries}" th:value="${country}" th:text="${country}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address:</label>
+                                <input type="text" class="form-control" th:field="*{address}"></input>
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Product Modal -->
+        <div id="addProduct" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="cancel" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add Product</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-inline" action="#" th:action="@{/saveProduct}" th:object="${product}" method="post">
+                            <div class="form-group">
+                                <label for="name">Name:</label>
+                                <input type="text" class="form-control" th:field="*{name}"></input>
+                            </div>
+                            <div class="form-group">
+                                <label for="price">Price:</label>
+                                <input type="text" class="form-control" th:field="*{price}"></input>
+                            </div>
+                            <div class="form-group">
+                                <label for="desc">Description:</label>
+                                <input type="text" class="form-control" th:field="*{desc}"></input>
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Order Modal -->
+        <div id="addOrder" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="cancel" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Add Order</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-inline" action="#" th:action="@{/conductOrder}" th:object="${orderTransfer}" method="post">
+                            <div class="form-group">
+                                <label for="client">Client:</label>
+                                <select class="form-control" th:field="*{securityCode}">
+                                    <option th:each="client : ${clients}" th:value="${client.securityCode}" th:text="${client.securityCode} + ' ' + ${client.firstName} + ' ' + ${client.lastName}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="product">Product:</label>
+                                <select class="form-control" th:field="*{barCode}">
+                                    <option th:each="product : ${products}" th:value="${product.barCode}" th:text="${product.barCode} + ' ' +${product.name} "></option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-default">Confirm</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Client Modal -->
+        <div id="editClient" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="cancel" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Edit Client</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-inline" action="#" th:action="@{/saveClient}" th:object="${client}" method="post">
+                            <div class="form-group">
+                                <input type="hidden" id="securityCode" class="form-control" th:field="*{securityCode}"></input>
+                            </div>
+                            <div class="form-group">
+                                <label for="firstName">First name:</label>
+                                <input type="text" id="firstName" class="form-control" th:field="*{firstName}"></input>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last name:</label>
+                                <input type="text" id="lastName" class="form-control" th:field="*{lastName}"></input>
+                            </div>
+                            <div class="form-group">
+                                <label for="phoneNumber">Phonenumber:</label>
+                                <input type="text" id="phoneNumber" class="form-control" th:field="*{phoneNumber}"></input>
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country:</label>
+                                <select class="form-control" th:field="*{country}">
+                                    <option th:each="country : ${countries}" th:value="${country}" th:text="${country}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address:</label>
+                                <input type="text" id="address" class="form-control" th:field="*{address}"></input>
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Product Modal -->
+        <div id="editProduct" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="cancel" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Edit Product</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-inline" action="#" th:action="@{/saveProduct}" th:object="${product}" method="post">
+                            <div class="form-group">
+                                <input type="hidden" id="barCode" class="form-control" th:field="*{barCode}"></input>
+                            </div>
+                            <div class="form-group">
+                                <label for="name">Name:</label>
+                                <input type="text" class="form-control" th:field="*{name}"></input>
+                            </div>
+                            <div class="form-group">
+                                <label for="price">Price:</label>
+                                <input type="text" class="form-control" th:field="*{price}"></input>
+                            </div>
+                            <div class="form-group">
+                                <label for="desc">Description:</label>
+                                <input type="text" class="form-control" th:field="*{desc}"></input>
+                            </div>
+                            <div class="form-group">
+                                <label for="releaseDate">Release Date:</label>
+                                <input type="text" class="form-control" th:field="*{releaseDate}"></input>
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
 </html>
