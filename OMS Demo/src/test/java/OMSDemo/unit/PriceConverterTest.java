@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,27 +14,30 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import OMSDemo.services.FixerRatesService;
+import OMSDemo.service.FixerRatesService;
 import OMSDemo.util.PriceConverter;
 
-import static org.mockito.BDDMockito.*;
+import static java.util.Arrays.asList;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PriceConverter.class)
+@SpringBootTest
 public class PriceConverterTest {
 
     @MockBean
-    private FixerRatesService fixer;
+    FixerRatesService fixer;
 
     @Autowired
-    private PriceConverter converter;
+    PriceConverter converter;
 
     Map<String, Object> mockFixerData;
 
     @Before
     public void setUp() {
-        mockFixerData = new HashMap<String, Object>();
-        Map<String, Double> mockFixerRates = new HashMap<String, Double>();
+        mockFixerData = new HashMap<>();
+        Map<String, Double> mockFixerRates = new HashMap<>();
 
         mockFixerRates.put("USD", 1.00);
         mockFixerRates.put("GBP", 2.00);
@@ -47,33 +49,25 @@ public class PriceConverterTest {
 
     @Test
     public void testConversions() throws IOException {
-        given(this.fixer.getFixerData()).willReturn(mockFixerData);
+        given(fixer.getFixerRatesData()).willReturn(mockFixerData);
 
-        /**
-         * Supported countries should contain countries that have currency rates
-         * present in fixerData and countries that use the base currency.
-         */
         Set<String> countries = converter.getSupportedCountries();
-        Assert.assertNotNull(countries);
-        Assert.assertFalse(countries.isEmpty());
-        Assert.assertTrue(countries.contains("France"));
-        Assert.assertTrue(countries.contains("United States"));
-        Assert.assertTrue(countries.contains("United Kingdom"));
+
+        assertThat(countries).isNotEmpty();
+        assertThat(countries).containsAll(asList("France", "United States", "United Kingdom"));
     }
 
     @Test
-    public void testSupportedCountries() throws IOException {
-        given(this.fixer.getFixerData()).willReturn(mockFixerData);
+    public void testConversion() throws IOException {
+        given(fixer.getFixerRatesData()).willReturn(mockFixerData);
 
         BigDecimal convertedPrice1 = converter.convert(new BigDecimal(5), "United States");
         BigDecimal convertedPrice2 = converter.convert(new BigDecimal(4), "United Kingdom");
 
-        Assert.assertNotNull(convertedPrice1);
-        Assert.assertNotNull(convertedPrice2);
+        assertThat(convertedPrice1).isNotNull();
+        assertThat(convertedPrice2).isNotNull();
 
-        Assert.assertTrue(convertedPrice1.toPlainString().equals("5"));
-        Assert.assertTrue(convertedPrice2.toPlainString().equals("8"));
-
+        assertThat(convertedPrice1).isEqualTo("5");
+        assertThat(convertedPrice2).isEqualTo("8");
     }
-
 }

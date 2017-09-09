@@ -1,11 +1,9 @@
 package OMSDemo.unit;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +14,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import OMSDemo.repository.ClientRepository;
 import OMSDemo.repository.OrderRepository;
 import OMSDemo.repository.ProductRepository;
-import OMSDemo.services.FixerRatesService;
-import OMSDemo.services.OmsService;
+import OMSDemo.service.FixerRatesService;
+import OMSDemo.service.OmsService;
 import OMSDemo.util.PriceConverter;
 import OMSDemo.util.PriceFormatter;
 
+import static java.util.Arrays.asList;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
@@ -28,35 +29,34 @@ import static org.mockito.BDDMockito.given;
 public class OmsServiceTest {
 
     @MockBean
-    private ClientRepository clientRepo;
+    ClientRepository clientRepo;
 
     @MockBean
-    private ProductRepository productRepo;
+    ProductRepository productRepo;
 
     @MockBean
-    private OrderRepository orderRepo;
+    OrderRepository orderRepo;
 
     @MockBean
-    private FixerRatesService fixer;
+    FixerRatesService fixer;
 
     @MockBean
-    private PriceConverter priceConverter;
+    PriceConverter priceConverter;
 
     @MockBean
-    private PriceFormatter priceFormatter;
+    PriceFormatter priceFormatter;
 
     @Autowired
     private OmsService omsService;
 
     @Test
     public void testGetCountries() throws IOException {
-        given(this.priceConverter.getSupportedCountries()).willReturn(
-                new HashSet<String>(Arrays.asList("United States", "United Kingdom")));
+        given(priceConverter.getSupportedCountries()).willReturn(
+                new HashSet<>(asList("United States", "United Kingdom")));
 
         List<String> countries = omsService.getCountries();
-        Assert.assertNotNull(countries);
-        Assert.assertFalse(countries.isEmpty());
-        Assert.assertTrue(countries.contains("United States"));
-    }
 
+        assertThat(countries).isNotEmpty();
+        assertThat(countries).contains("United States");
+    }
 }
