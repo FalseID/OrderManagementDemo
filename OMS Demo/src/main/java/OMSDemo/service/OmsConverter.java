@@ -1,4 +1,4 @@
-package OMSDemo.util;
+package OMSDemo.service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -12,13 +12,11 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import OMSDemo.service.FixerRatesService;
-
 import static java.util.Locale.getISOCountries;
 import static java.util.stream.Collectors.toMap;
 
 @Component
-public class PriceConverter {
+public class OmsConverter {
 
     @Autowired
     FixerRatesService fixer;

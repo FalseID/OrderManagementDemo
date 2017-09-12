@@ -16,8 +16,8 @@ import OMSDemo.repository.OrderRepository;
 import OMSDemo.repository.ProductRepository;
 import OMSDemo.service.FixerRatesService;
 import OMSDemo.service.OmsService;
-import OMSDemo.util.PriceConverter;
-import OMSDemo.util.PriceFormatter;
+import OMSDemo.service.OmsConverter;
+import OMSDemo.util.FormatUtil;
 
 import static java.util.Arrays.asList;
 
@@ -41,10 +41,10 @@ public class OmsServiceTest {
     FixerRatesService fixer;
 
     @MockBean
-    PriceConverter priceConverter;
+    OmsConverter priceConverter;
 
     @MockBean
-    PriceFormatter priceFormatter;
+    FormatUtil priceFormatter;
 
     @Autowired
     private OmsService omsService;

@@ -5,24 +5,23 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import OMSDemo.util.PriceFormatter;
+import OMSDemo.util.FormatUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = PriceFormatter.class)
-public class PriceFormatterTest {
+import static OMSDemo.util.FormatUtil.format;
+import static OMSDemo.util.FormatUtil.getCountryToISOMap;
 
-    @Autowired
-    private PriceFormatter formatter;
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = FormatUtil.class)
+public class FormatUtilTest {
 
     @Test
     public void IsoCodesTest() {
-        Map<String, String> countryToISOMap = formatter.getCountryToISOMap();
+        Map<String, String> countryToISOMap = getCountryToISOMap();
 
         assertThat(countryToISOMap).isNotEmpty();
         assertThat(countryToISOMap).containsEntry("United States", "US");
@@ -30,8 +29,8 @@ public class PriceFormatterTest {
 
     @Test
     public void FormatTest() {
-        String formattedPrice1 = formatter.format(new BigDecimal(0), "United States");
-        String formattedPrice2 = formatter.format(new BigDecimal(100), "United Kingdom");
+        String formattedPrice1 = format(new BigDecimal(0), "United States");
+        String formattedPrice2 = format(new BigDecimal(100), "United Kingdom");
 
         assertThat(formattedPrice1).isNotEmpty();
         assertThat(formattedPrice2).isNotEmpty();

@@ -18,28 +18,25 @@ import OMSDemo.domain.StoreOrder;
 import OMSDemo.repository.ClientRepository;
 import OMSDemo.repository.OrderRepository;
 import OMSDemo.repository.ProductRepository;
-import OMSDemo.util.PriceConverter;
-import OMSDemo.util.PriceFormatter;
 
 import static java.util.stream.Collectors.toList;
+
+import static OMSDemo.util.FormatUtil.format;
 
 @Service
 public class OmsService {
 
     @Autowired
-    private ClientRepository clientRepo;
+    ClientRepository clientRepo;
 
     @Autowired
-    private ProductRepository productRepo;
+    ProductRepository productRepo;
 
     @Autowired
-    private OrderRepository orderRepo;
+    OrderRepository orderRepo;
 
     @Autowired
-    private PriceConverter converter;
-
-    @Autowired
-    private PriceFormatter formatter;
+    OmsConverter converter;
 
     public List<String> getCountries() throws IOException {
         List<String> countries = new ArrayList<>(converter.getSupportedCountries());
@@ -84,7 +81,7 @@ public class OmsService {
         Product product = productRepo.findByBarCode(barCode);
 
         BigDecimal convertedPrice = converter.convert(product.getPrice(), client.getCountry());
-        String formattedPrice = formatter.format(convertedPrice, client.getCountry());
+        String formattedPrice = format(convertedPrice, client.getCountry());
 
         StoreOrder storeOrder = new StoreOrder(client, product, formattedPrice, new Date());
         orderRepo.save(storeOrder);

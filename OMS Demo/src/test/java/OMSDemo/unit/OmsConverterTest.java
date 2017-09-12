@@ -15,7 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import OMSDemo.service.FixerRatesService;
-import OMSDemo.util.PriceConverter;
+import OMSDemo.service.OmsConverter;
 
 import static java.util.Arrays.asList;
 
@@ -24,13 +24,13 @@ import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class PriceConverterTest {
+public class OmsConverterTest {
 
     @MockBean
     FixerRatesService fixer;
 
     @Autowired
-    PriceConverter converter;
+    OmsConverter converter;
 
     Map<String, Object> mockFixerData;
 

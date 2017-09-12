@@ -84,7 +84,7 @@ public class OmsController {
     }
 
     @RequestMapping(value = "/conductOrder", method = RequestMethod.POST)
-    public String conductOrdersaveClient(@ModelAttribute(value = "orderTransfer") OrderTransfer orderTransfer) {
+    public String conductOrder(@ModelAttribute(value = "orderTransfer") OrderTransfer orderTransfer) {
         try {
             omsService.makeTransaction(orderTransfer);
         } catch (IOException ex) {
